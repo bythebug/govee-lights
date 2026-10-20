@@ -7,7 +7,7 @@ A tiny macOS menu bar app for controlling Govee lights over your local Wi-Fi. No
 - Adjusts brightness, warm-to-cool white, quick colours and a full colour picker
 - Click lights to select them; controls apply to the selection, or to all lights if none are selected
 - Starts at login (optional)
-- No dependencies, ~600 KB
+- No dependencies, ~1.5 MB
 
 ## Install
 
