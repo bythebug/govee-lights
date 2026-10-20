@@ -6,7 +6,8 @@ A tiny macOS menu bar app for controlling Govee lights over your local Wi-Fi. No
 - Turns each light on/off, or all at once
 - Adjusts brightness, warm-to-cool white, quick colours and a full colour picker
 - Click lights to select them; controls apply to the selection, or to all lights if none are selected
-- One Swift file, no dependencies, ~500 KB
+- Starts at login (optional)
+- No dependencies, ~600 KB
 
 ## Install
 
@@ -63,7 +64,7 @@ Govee's [LAN API](https://app-h5.govee.com/user-manual/wlan-guide) is plain JSON
 
 ## Start at login
 
-System Settings → General → Login Items → **+** → Govee Lights.
+Govee Lights starts at login by default; macOS shows a notification the first time. Turn it off with the **Launch at login** checkbox at the bottom of the panel, or in System Settings → General → Login Items.
 
 ## License
 

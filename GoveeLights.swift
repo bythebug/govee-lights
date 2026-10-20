@@ -1,6 +1,7 @@
 // Menu bar app for Govee lights over the LAN API (same protocol as ../govee.py).
 import AppKit
 import Darwin
+import ServiceManagement
 import SwiftUI
 
 struct Light: Identifiable {
@@ -98,10 +99,26 @@ enum Govee {
     @Published var brightness = 100.0
     @Published var kelvin = 4000.0
     @Published var color = Color.white
+    @Published var launchAtLogin = SMAppService.mainApp.status == .enabled
 
     var targets: [String] { selected.isEmpty ? lights.map(\.ip) : Array(selected) }
 
-    init() { refresh() }
+    init() {
+        if !UserDefaults.standard.bool(forKey: "loginItemConfigured") {  // on by default; user can turn it off
+            UserDefaults.standard.set(true, forKey: "loginItemConfigured")
+            setLaunchAtLogin(true)
+        }
+        refresh()
+    }
+
+    func setLaunchAtLogin(_ on: Bool) {
+        do {
+            if on { try SMAppService.mainApp.register() } else { try SMAppService.mainApp.unregister() }
+        } catch {
+            NSLog("Govee Lights: launch at login: \(error)")
+        }
+        launchAtLogin = SMAppService.mainApp.status == .enabled
+    }
 
     func refresh() {
         guard !scanning else { return }
@@ -199,7 +216,12 @@ struct Panel: View {
             .onChange(of: store.color) { _, c in store.apply(color: c) }
 
             Divider()
-            Button("Quit") { NSApp.terminate(nil) }.buttonStyle(.borderless)
+            HStack {
+                Toggle("Launch at login", isOn: Binding(get: { store.launchAtLogin }, set: { store.setLaunchAtLogin($0) }))
+                    .toggleStyle(.checkbox)
+                Spacer()
+                Button("Quit") { NSApp.terminate(nil) }.buttonStyle(.borderless)
+            }
         }
         .padding()
         .frame(width: 290)
