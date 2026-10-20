@@ -115,7 +115,7 @@ enum Govee {
         do {
             if on { try SMAppService.mainApp.register() } else { try SMAppService.mainApp.unregister() }
         } catch {
-            NSLog("Govee Lights: launch at login: \(error)")
+            NSLog("LightOS: launch at login: \(error)")
         }
         launchAtLogin = SMAppService.mainApp.status == .enabled
     }
@@ -159,11 +159,24 @@ enum Govee {
 struct Panel: View {
     @ObservedObject var store: Store
     let swatches: [Color] = [.red, .orange, .yellow, .green, .cyan, .blue, .purple, .pink]
+    let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "dev"
+
+    func showAbout() {
+        let credits = NSMutableAttributedString()
+        for (text, url) in [("github.com/bythebug", "https://github.com/bythebug"),
+                            ("github.com/bythebug/lightos", "https://github.com/bythebug/lightos")] {
+            if credits.length > 0 { credits.append(NSAttributedString(string: "\n")) }
+            credits.append(NSAttributedString(string: text, attributes: [.link: URL(string: url)!, .font: NSFont.systemFont(ofSize: 11)]))
+        }
+        credits.setAlignment(.center, range: NSRange(location: 0, length: credits.length))
+        NSApp.activate(ignoringOtherApps: true)
+        NSApp.orderFrontStandardAboutPanel(options: [.credits: credits])
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("Govee Lights").font(.headline)
+                Text("LightOS").font(.headline)
                 Spacer()
                 if store.scanning { ProgressView().controlSize(.small) }
                 Button { store.refresh() } label: { Image(systemName: "arrow.clockwise") }
@@ -220,19 +233,27 @@ struct Panel: View {
                 Toggle("Launch at login", isOn: Binding(get: { store.launchAtLogin }, set: { store.setLaunchAtLogin($0) }))
                     .toggleStyle(.checkbox)
                 Spacer()
+                Button("About") { showAbout() }.buttonStyle(.borderless)
                 Button("Quit") { NSApp.terminate(nil) }.buttonStyle(.borderless)
             }
+            HStack(spacing: 4) {
+                Text("LightOS \(version) · by").foregroundStyle(.secondary)
+                Link("bythebug", destination: URL(string: "https://github.com/bythebug")!)
+                Text("·").foregroundStyle(.secondary)
+                Link("GitHub", destination: URL(string: "https://github.com/bythebug/lightos")!)
+            }
+            .font(.caption)
         }
         .padding()
         .frame(width: 290)
     }
 }
 
-@main struct GoveeLightsApp: App {
+@main struct LightOSApp: App {
     @StateObject private var store = Store()
 
     var body: some Scene {
-        MenuBarExtra("Govee Lights", systemImage: "lightbulb.fill") { Panel(store: store) }
+        MenuBarExtra("LightOS", systemImage: "lightbulb.fill") { Panel(store: store) }
             .menuBarExtraStyle(.window)
     }
 }

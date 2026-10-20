@@ -1,4 +1,4 @@
-# Govee Lights
+# LightOS
 
 A tiny macOS menu bar app for controlling Govee lights over your local Wi-Fi. No account or cloud, and no Govee app running. It talks to the lights directly.
 
@@ -12,16 +12,16 @@ A tiny macOS menu bar app for controlling Govee lights over your local Wi-Fi. No
 ## Install
 
 ```sh
-brew install --cask bythebug/tap/govee-lights
+brew install --cask bythebug/tap/lightos
 ```
 
 The app isn't notarized yet, so allow the first launch with:
 
 ```sh
-xattr -dr com.apple.quarantine "/Applications/Govee Lights.app"
+xattr -dr com.apple.quarantine "/Applications/LightOS.app"
 ```
 
-Then open **Govee Lights** from Applications. A lightbulb appears in the menu bar. When macOS asks to let it find devices on your local network, click **Allow**.
+Then open **LightOS** from Applications. A lightbulb appears in the menu bar. When macOS asks to let it find devices on your local network, click **Allow**.
 
 ## Before you start: turn on LAN Control
 
@@ -40,10 +40,10 @@ Your Mac must be on the same Wi-Fi network as the lights.
 Requires macOS 14+ and the Xcode Command Line Tools (`xcode-select --install`).
 
 ```sh
-git clone https://github.com/bythebug/govee-lights.git
-cd govee-lights
+git clone https://github.com/bythebug/lightos.git
+cd lightos
 ./build.sh
-open "Govee Lights.app"
+open "LightOS.app"
 ```
 
 ## How it works
@@ -64,7 +64,7 @@ Govee's [LAN API](https://app-h5.govee.com/user-manual/wlan-guide) is plain JSON
 
 ## Start at login
 
-Govee Lights starts at login by default; macOS shows a notification the first time. Turn it off with the **Launch at login** checkbox at the bottom of the panel, or in System Settings → General → Login Items.
+LightOS starts at login by default; macOS shows a notification the first time. Turn it off with the **Launch at login** checkbox at the bottom of the panel, or in System Settings → General → Login Items.
 
 ## License
 
